@@ -23,7 +23,6 @@ export default {
 			if (this.image.trim() !== '') {
 				response = `${response} background-image: url('${this.image}') !important;`;
 			}
-			console.log(response);
 			return response;
 		},
 	},
@@ -38,7 +37,7 @@ export default {
 		height: 100%;
 		margin: 0;
 		padding: 0;
-		background-size: cover;
+		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
 		background-image: radial-gradient(

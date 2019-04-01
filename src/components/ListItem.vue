@@ -1,9 +1,10 @@
 <template>
 	<div
 		class="row my-4 rounded"
-		:class="hover ? 'text-muted' : 'text-white'"
+		:class="hover || isActive ? 'text-muted active' : 'text-white'"
 		@mouseover="hover = true"
 		@mouseout="hover = false"
+		@click="setActive()"
 		>
 		<div class="col-auto p-2">
 			<img
@@ -63,11 +64,20 @@ export default {
 			type: String,
 			default: 'Listeners',
 		},
+		isActive: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
 			hover: false,
 		};
+	},
+	methods: {
+		setActive() {
+			this.$emit('setActive');
+		},
 	},
 };
 </script>
@@ -79,7 +89,7 @@ export default {
 	div.row {
 		background: rgba(255,255,255,.4);
 	}
-	div.row:hover {
+	div.active, div.row:hover {
 		background: rgba(255,255,255,.7);
 	}
 </style>

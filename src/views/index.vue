@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper">
 		<background
-			image="https://http2.mlstatic.com/motocicleta-suzuki-gixxer-gixxer-bitono-2019-nuevas-D_NQ_NP_828068-MLM29518285312_022019-F.webp"
+			:image="backgroundImage"
 			:z-index="-1"
 			/>
 		<background />
@@ -24,6 +24,7 @@
 			<div class="col">
 				<div class="form-group">
 					<input
+						v-model="artistName"
 						class="form-control form-control-lg bg-transparent border-0 mb-0"
 						:placeholder="translate('search_artists')"
 						>
@@ -50,36 +51,103 @@
 			<template v-if="showGrid">
 				<div class="row">
 					<grid-item
+						v-for="(item, index) in artists"
+						:key="index"
 						class="my-2"
-						title="Title"
-						:playcount="10000"
-						image="https://via.placeholder.com/400x400.png"
+						:is-active="index===activeArtist"
+						:title="item.name"
+						:image="getImageBySize(item.image, sizes.LARGE)"
+						:playcount="item.playcount"
+						@setActive="setActive(index)"
 						/>
 				</div>
 			</template>
 			<template v-else>
 				<list-item
-					title="Title"
-					image="https://via.placeholder.com/100x100.png"
-					:playcount="10000"
-					:listeners="1209878"
+					v-for="(item, index) in artists"
+					:key="index"
+					:is-active="index===activeArtist"
+					:title="item.name"
+					:image="getImageBySize(item.image, sizes.LARGE)"
+					:playcount="item.playcount"
+					:listeners="item.listeners"
+					@setActive="setActive(index)"
 					/>
 			</template>
 		</div>
 	</div>
 </template>
 <script>
+import { SIZES as sizes } from '@/settings/Artists';
 import GridItem from '@/components/GridItem.vue';
 import ListItem from '@/components/ListItem.vue';
 import Background from '@/components/Background.vue';
+import ArtistsClass from '@/util/Artists.js';
 
 export default {
 	name: 'Main',
 	components: { GridItem, ListItem, Background },
 	data() {
 		return {
+			artistName: '',
 			showGrid: false,
+			activeArtist: '',
+			data: new ArtistsClass(),
+			sizes,
+			timer: '',
 		};
+	},
+	computed: {
+		artists() {
+			try {
+				try {
+					return this.data.response.data.results.artistmatches.artist;
+				} catch (er) {
+					return this.data.response.data.artists.artist;
+				}
+			} catch (error) {
+				return [];
+			}
+		},
+		backgroundImage() {
+			try {
+				const artist = this.artists[this.activeArtist];
+				return this.getImageBySize(artist.image, this.sizes.MEGA);
+			} catch (error) {
+				return require('@/assets/default.jpg'); // eslint-disable-line global-require
+			}
+		},
+	},
+	watch: {
+		artistName: function an() {
+			this.searchArtist();
+		}
+	},
+	created() {
+		this.data.getList();
+	},
+	methods: {
+		getImageBySize(image, size) {
+			return image.find(item => item.size === size)['#text'];
+		},
+
+		searchArtist() {
+			if (this.timer) {
+				clearTimeout(this.timer);
+			}
+			this.timer = setTimeout(() => {
+				if (this.artistName.length < 1) {
+					this.data.getList();
+				}
+				else {
+					this.data.search(this.artistName);
+				}
+			}, 500)
+		},
+
+		setActive(index) {
+			this.activeArtist = index;
+		},
 	},
 };
 </script>
