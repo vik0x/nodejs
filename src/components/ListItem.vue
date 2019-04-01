@@ -1,5 +1,10 @@
 <template>
-	<div class="row my-4 rounded text-muted">
+	<div
+		class="row my-4 rounded"
+		:class="hover ? 'text-muted' : 'text-white'"
+		@mouseover="hover = true"
+		@mouseout="hover = false"
+		>
 		<div class="col-auto p-2">
 			<img
 				:src="image"
@@ -58,6 +63,11 @@ export default {
 			type: String,
 			default: 'Listeners',
 		},
+	},
+	data() {
+		return {
+			hover: false,
+		};
 	},
 };
 </script>

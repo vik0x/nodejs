@@ -1,10 +1,10 @@
 <template>
 	<div class="wrapper">
-		<div
-			class="backgound"
-			style="background-image: url('https://http2.mlstatic.com/motocicleta-suzuki-gixxer-gixxer-bitono-2019-nuevas-D_NQ_NP_828068-MLM29518285312_022019-F.webp');"
+		<background
+			image="https://http2.mlstatic.com/motocicleta-suzuki-gixxer-gixxer-bitono-2019-nuevas-D_NQ_NP_828068-MLM29518285312_022019-F.webp"
+			:z-index="-1"
 			/>
-		<div class="backgound2" />
+		<background />
 		<div class="row">
 			<div class="col">
 				<div class="h1 text-white">
@@ -71,10 +71,11 @@
 <script>
 import GridItem from '@/components/GridItem.vue';
 import ListItem from '@/components/ListItem.vue';
+import Background from '@/components/Background.vue';
 
 export default {
 	name: 'Main',
-	components: { GridItem, ListItem },
+	components: { GridItem, ListItem, Background },
 	data() {
 		return {
 			showGrid: false,
@@ -82,32 +83,3 @@ export default {
 	},
 };
 </script>
-<style scoped>
-	.backgound {
-		top: 0;
-		left: 0;
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		padding: 0;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: center;
-		z-index: -1;
-	}
-	.backgound2 {
-		top: 0;
-		left: 0;
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		padding: 0;
-		background-image: radial-gradient(
-			rgba(45,0,97,1),
-			rgba(45,0,97,0.5)
-		);
-		z-index: 0;
-	}
-</style>
